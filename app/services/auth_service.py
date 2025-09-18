@@ -161,6 +161,7 @@ class AuthService:
         """
         payload = self.decode_token(token)
         user_id = payload.get("user_id")
+        email = payload.get("email")
         
         if not user_id:
             raise HTTPException(
@@ -168,12 +169,28 @@ class AuthService:
                 detail="Invalid token payload"
             )
         
-        user = db.query(User).filter(
-            and_(
-                User.id == user_id,
-                User.is_active == True
-            )
-        ).first()
+        # Prefer querying by email (unique and DB-agnostic)
+        user = None
+        if email:
+            user = db.query(User).filter(
+                and_(
+                    User.email == email,
+                    User.is_active == True
+                )
+            ).first()
+        
+        if not user and user_id:
+            # Fallback: normalize UUID string from token to UUID object when supported by the DB/dialect
+            try:
+                user_uuid = uuid.UUID(str(user_id))
+            except Exception:
+                user_uuid = user_id  # fallback to raw value if not a valid UUID string
+            user = db.query(User).filter(
+                and_(
+                    User.id == user_uuid,
+                    User.is_active == True
+                )
+            ).first()
         
         if not user:
             raise HTTPException(
@@ -196,7 +213,11 @@ class AuthService:
                 detail="Invalid token payload"
             )
         
-        return user_id
+        # Return standardized string UUID
+        try:
+            return str(uuid.UUID(str(user_id)))
+        except Exception:
+            return str(user_id)
     
     def check_permission(
         self, 
