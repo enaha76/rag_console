@@ -23,6 +23,13 @@ A production-grade per-user Retrieval-Augmented Generation (RAG) backend and con
 External: LLM Providers (OpenAI / Anthropic)
 ```
 
+## Demo Video
+
+<video src="./docs/rag.webm" controls width="720">
+  Your browser does not support the video tag. You can download and view the demo video here:
+  <a href="./docs/rag.webm">docs/rag.webm</a>
+</video>
+
 ## Screenshots
 
 ![Chat Screen](./docs/images/chat.png)

@@ -94,6 +94,29 @@ export default function ChatPage() {
         await ragStream(payload, (chunk) => {
           setMessages((prev) => prev.map((msg) => msg.id === assistantMsg.id ? { ...msg, text: msg.text + chunk } : msg));
         });
+        // After stream completes, hydrate citations from latest history entry (session-aware)
+        try {
+          const hist = await queryHistory(0, 1, sessionId || undefined);
+          const last = hist?.queries?.[0];
+          if (last && last.response) {
+            const sources: any[] = [];
+            // Prefer source_attribution (list of strings)
+            if (Array.isArray(last.response.source_attribution) && last.response.source_attribution.length) {
+              for (const s of last.response.source_attribution) {
+                sources.push({ source: s });
+              }
+            } else if (Array.isArray(last.response.context_chunks) && last.response.context_chunks.length) {
+              for (const cid of last.response.context_chunks) {
+                sources.push({ source: String(cid) });
+              }
+            }
+            if (sources.length) {
+              setMessages((prev) => prev.map((msg) => msg.id === assistantMsg.id ? { ...msg, meta: { ...(msg.meta || {}), sources } } : msg));
+            }
+          }
+        } catch (e) {
+          // ignore hydrate errors
+        }
       } else {
         const res = await ragQuery(payload);
         setMessages((prev) => prev.map((msg) => msg.id === assistantMsg.id ? { ...msg, text: res.response || "", meta: { processing_time_ms: res.processing_time_ms, total_tokens: res.total_tokens, sources: res.context_documents } } : msg));
