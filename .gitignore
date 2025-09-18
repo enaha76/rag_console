@@ -1,0 +1,62 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+.envrc
+
+# Packaging / build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Caches & tooling
+.mypy_cache/
+.pytest_cache/
+.pytype/
+.cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Logs
+*.log
+
+# Local environment files (keep env.example committed)
+.env
+*.local
+
+# App uploads (generated at runtime)
+uploads/
+
+# --- Node / Vite (frontend) ---
+front/node_modules/
+front/dist/
+front/.vite/
+front/.turbo/
+front/.next/
+front/.cache/
+
+# Lockfiles are kept tracked (package-lock.json / pnpm-lock.yaml)
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+# Local overrides
+docker-compose.override.yml
+
+# --- Misc ---
+# Netlify / Vercel (if used)
+.netlify/
+.vercel/

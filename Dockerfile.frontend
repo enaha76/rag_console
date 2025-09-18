@@ -1,0 +1,41 @@
+#############################################
+# Production Dockerfile for Vite/React front #
+#############################################
+
+# 1) Build stage
+FROM node:18-alpine AS build
+WORKDIR /app
+
+# Install dependencies first (better caching)
+COPY front/package*.json ./
+RUN npm ci
+
+# Copy source and build
+COPY front/ .
+
+# Optionally pass at build-time: --build-arg VITE_API_BASE_URL=...
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+
+# Build client and server bundles as defined in package.json
+RUN npm run build
+
+# 2) Runtime stage
+FROM node:18-alpine
+WORKDIR /app
+ENV NODE_ENV=production
+
+# Copy built artifacts and minimal runtime deps
+COPY --from=build /app/dist /app/dist
+COPY --from=build /app/package*.json /app/
+RUN npm ci --omit=dev
+
+# Expose the app port (Node server serves dist/server)
+EXPOSE 8080
+
+# Start the Node SSR/static server produced by the build
+CMD ["node", "dist/server/node-build.mjs"]
+
+# Health check for Node server
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD wget -qO- http://localhost:8080 || exit 1
