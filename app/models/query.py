@@ -4,7 +4,8 @@ Query-related database models
 import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime, Text, ForeignKey, Integer, Float, Boolean
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import JSON
 from sqlalchemy.orm import relationship
 from app.database.base import Base
 
@@ -29,7 +30,7 @@ class Query(Base):
     
     # Retrieval Context
     retrieved_chunks_count = Column(Integer, default=0)
-    retrieved_documents = Column(JSONB, default=list)  # List of document IDs used
+    retrieved_documents = Column(JSON, default=list)  # List of document IDs used
     similarity_threshold = Column(Float, default=0.7)
     
     # LLM Information
@@ -52,7 +53,7 @@ class Query(Base):
     conversation_turn = Column(Integer, default=1)
     
     # Metadata
-    query_metadata = Column(JSONB, default=dict)
+    query_metadata = Column(JSON, default=dict)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
@@ -82,11 +83,11 @@ class QueryResponse(Base):
     
     # Context Information
     context_used = Column(Text, nullable=True)  # The retrieved context used
-    context_chunks = Column(JSONB, default=list)  # List of chunk IDs used
+    context_chunks = Column(JSON, default=list)  # List of chunk IDs used
     
     # Generation Metadata
     confidence_score = Column(Float, nullable=True)
-    source_attribution = Column(JSONB, default=list)  # Sources used in response
+    source_attribution = Column(JSON, default=list)  # Sources used in response
     
     # Quality Control
     contains_citations = Column(Boolean, default=False)

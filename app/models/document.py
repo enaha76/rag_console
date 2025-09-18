@@ -4,7 +4,8 @@ Document-related database models
 import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime, Text, ForeignKey, Integer, Float
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import JSON
 from sqlalchemy.orm import relationship
 from app.database.base import Base
 
@@ -42,8 +43,8 @@ class Document(Base):
     embedding_model = Column(String(100), nullable=True)
     
     # Additional Metadata
-    doc_metadata = Column(JSONB, default=dict)
-    tags = Column(JSONB, default=list)
+    doc_metadata = Column(JSON, default=dict)
+    tags = Column(JSON, default=list)
     
     # Timestamps
     uploaded_at = Column(DateTime, default=datetime.utcnow, index=True)
@@ -89,7 +90,7 @@ class DocumentChunk(Base):
     last_similarity_score = Column(Float, nullable=True)
     
     # Metadata
-    doc_metadata = Column(JSONB, default=dict)
+    doc_metadata = Column(JSON, default=dict)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
