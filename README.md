@@ -30,6 +30,12 @@ External: LLM Providers (OpenAI / Anthropic)
   <a href="./docs/rag.webm">docs/rag.webm</a>
 </video>
 
+- [Download/view demo video (rag.webm)](./docs/rag.webm)
+
+Optional GIF preview (for GitHub inline display):
+
+![Demo](./docs/demo.gif)
+
 ## Screenshots
 
 ![Chat Screen](./docs/images/chat.png)
