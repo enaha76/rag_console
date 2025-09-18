@@ -25,8 +25,6 @@ External: LLM Providers (OpenAI / Anthropic)
 
 ## Screenshots
 
-Add your own screenshots to the `docs/images/` directory, then update the image paths below as needed.
-
 ![Chat Screen](./docs/images/chat.png)
 *Chat screen demonstrating a streaming RAG response*
 
@@ -62,12 +60,6 @@ Add your own screenshots to the `docs/images/` directory, then update the image 
 - OpenAI/Anthropic API keys (optional, for LLM functionality)
 
 **1. Clone and Setup**
-```bash
-git clone <your-repo-url>
-cd <your-project-dir>
-cp env.example .env
-# Edit .env with your API keys and configuration
-```
 
 **2. Start the System**
 ```bash
